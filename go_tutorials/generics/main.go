@@ -1,3 +1,9 @@
+/*
+https://go.dev/doc/tutorial/generics
+
+To support this, you’ll write a function that declares type parameters in addition to its ordinary function parameters. These type parameters make the function generic, enabling it to work with arguments of different types. You’ll call the function with type arguments and ordinary function arguments.
+*/
+
 // A standalone program (as opposed to a library) is always in package main.
 package main
 
@@ -19,6 +25,11 @@ func main() {
 	fmt.Printf("Non-Generic Sums: %v and %v\n",
 		SumInts(ints),
 		SumFloats(floats))
+
+	fmt.Printf("Generic Sums: %v and %v\n",
+		SumIntsOrFloats[string, int64](ints),
+		SumIntsOrFloats[string, float64](floats))
+
 }
 
 // SumInts adds together the values of m.
@@ -33,6 +44,16 @@ func SumInts(m map[string]int64) int64 {
 // SumFloats adds together the values of m.
 func SumFloats(m map[string]float64) float64 {
 	var s float64
+	for _, v := range m {
+		s += v
+	}
+	return s
+}
+
+// SumIntsOrFloats sums the values of map m. It supports both int64 and float64
+// as types for map values.
+func SumIntsOrFloats[K comparable, V int64 | float64](m map[K]V) V {
+	var s V
 	for _, v := range m {
 		s += v
 	}
