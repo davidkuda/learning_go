@@ -26,9 +26,13 @@ func main() {
 		SumInts(ints),
 		SumFloats(floats))
 
+	// --- Add a generic function to handle multiple types:
+
 	fmt.Printf("Generic Sums: %v and %v\n",
 		SumIntsOrFloats[string, int64](ints),
 		SumIntsOrFloats[string, float64](floats))
+	
+	// --- Remove type arguments when calling the generic function:
 
 	// In many cases, you can omit the type arguments because the compiler can infer them.
 	// Note that this isn’t always possible. For example, if you needed to call a generic function that had no arguments, you would need to include the type arguments in the function call.
