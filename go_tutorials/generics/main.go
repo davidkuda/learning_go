@@ -30,6 +30,11 @@ func main() {
 		SumIntsOrFloats[string, int64](ints),
 		SumIntsOrFloats[string, float64](floats))
 
+	// In many cases, you can omit the type arguments because the compiler can infer them.
+	// Note that this isn’t always possible. For example, if you needed to call a generic function that had no arguments, you would need to include the type arguments in the function call.
+	fmt.Printf("Generic Sums, type parameters inferred: %v and %v\n",
+		SumIntsOrFloats(ints),
+		SumIntsOrFloats(floats))
 }
 
 // SumInts adds together the values of m.
