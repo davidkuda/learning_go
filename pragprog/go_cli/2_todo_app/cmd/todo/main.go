@@ -33,9 +33,11 @@ func main() {
 	switch {
 	case *list:
 		// List current to do items
+		count := 1
 		for _, item := range *l {
 			if !item.Done {
-				fmt.Println(item.Task)
+				fmt.Println(count, item.Task)
+				count++
 			}
 		}
 	case *complete > 0:

@@ -63,7 +63,7 @@ func TestTodoCLI(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		expected := task + "\n"
+		expected := "1 " + task + "\n"
 
 		if string(out) != expected {
 			t.Errorf("Expected %q, got %q instead\n", expected, string(out))
