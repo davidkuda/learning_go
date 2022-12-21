@@ -12,6 +12,13 @@ import (
 const todoFileName = ".todo.json"
 
 func main() {
+	// Invoke help with custom message with "./todo -h / -help / --help"
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "%s tool. Developed for The Pragmatic Bookshelf\n", os.Args[0])
+		fmt.Fprintln(flag.CommandLine.Output(), "Copyright 2020")
+		fmt.Fprintln(flag.CommandLine.Output(), "Usage Information:")
+		flag.PrintDefaults()
+	}
 	// Parse command line flags:
 	task := flag.String("task", "", "Task to be included in the Todo list")
 	list := flag.Bool("list", false, "List all tasks")
