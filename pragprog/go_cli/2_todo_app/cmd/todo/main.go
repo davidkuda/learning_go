@@ -34,7 +34,9 @@ func main() {
 	case *list:
 		// List current to do items
 		for _, item := range *l {
-			fmt.Println(item.Task)
+			if !item.Done {
+				fmt.Println(item.Task)
+			}
 		}
 	case *complete > 0:
 		// Complete the given item
