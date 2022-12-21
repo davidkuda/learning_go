@@ -19,6 +19,22 @@ type item struct {
 
 type List []item
 
+// String prints out a formatted list
+// Implements the fmt.Stringer interface
+func (l *List) String() string {
+	formatted := ""
+
+	for k, t := range *l {
+		prefix := "  "
+		if t.Done {
+			prefix = "x "
+		}
+		formatted += fmt.Sprintf("%s%d: %s\n", prefix, k+1, t.Task)
+	}
+
+	return formatted
+}
+
 // Append a new todo item to the list
 func (l *List) Add(task string) {
 	t := item{
@@ -83,5 +99,4 @@ func (l *List) Get(filename string) error {
 	}
 
 	return json.Unmarshal(file, l)
-
 }
