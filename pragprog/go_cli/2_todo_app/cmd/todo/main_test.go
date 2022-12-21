@@ -69,4 +69,25 @@ func TestTodoCLI(t *testing.T) {
 			t.Errorf("Expected %q, got %q instead\n", expected, string(out))
 		}
 	})
+
+	t.Run("CompleteTask", func(t *testing.T) {
+		cmd := exec.Command(cmdPath, "-complete", "1")
+		_, err := cmd.CombinedOutput()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		// after completion, list should be empty
+		cmd2 := exec.Command(cmdPath, "-list")
+		out, err := cmd2.CombinedOutput()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		expected := ""
+
+		if string(out) != expected {
+			t.Errorf("Expected %q, got %q instead\n", expected, string(out))
+		}
+	})
 }
