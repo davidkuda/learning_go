@@ -1,9 +1,15 @@
 package main
 
 import (
+	"bufio" // read data from the STDIN input stream
 	"flag"
 	"fmt"
+	// io.Reader interface to define param types: decouple your implementations
+	// from specific types, allowing your code to work with any types that
+	// implement the io.Reader interface
+	"io"
 	"os"
+	"strings"
 
 	"pragprog.com/rggo/interacting/todo"
 )
@@ -20,7 +26,9 @@ func main() {
 		flag.PrintDefaults()
 	}
 	// Parse command line flags:
+	// we actually no longer need -task, but I keep it as a reference to flag.String()
 	task := flag.String("task", "", "Task to be included in the Todo list")
+	add := flag.Bool("add", false, "Add task to the ToDo list")
 	list := flag.Bool("list", false, "List all tasks")
 	complete := flag.Int("complete", 0, "Item to be completed")
 
@@ -44,6 +52,23 @@ func main() {
 	case *list:
 		// List current to do items
 		fmt.Print(l)
+	case *add:
+		// when any arguments (excluding flags) are provided,
+		// they will be used as the new task
+		// note how os.Stdin matches the required io.Reader interface
+		// the ... operator expands the slice into a list of values
+		t, err := getTask(os.Stdin, flag.Args()...)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
+		l.Add(t)
+
+		//Save the new list
+		if err := l.Save(todoFileName); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(1)
+		}
 	case *complete > 0:
 		// Complete the given item
 		if err := l.Complete(*complete); err != nil {
@@ -68,4 +93,24 @@ func main() {
 		fmt.Fprintln(os.Stderr, "Invalid Option")
 		os.Exit(1)
 	}
+}
+
+// getTask decides where to get the description for a new
+// task from: arguments or STDIN
+// "variadic function" with three dots as in "parameter ...type"
+// -> fn accepts zero or more args
+func getTask(r io.Reader, args ...string) (string, error) {
+	if len(args) > 0 {
+		return strings.Join(args, " "), nil
+	}
+
+	s := bufio.NewScanner(r)
+	s.Scan()
+	if err := s.Err(); err != nil {
+		return "", err
+	}
+	if len(s.Text()) == 0 {
+		return "", fmt.Errorf("task cannot be blank")
+	}
+	return s.Text(), nil
 }
