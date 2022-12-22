@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -39,8 +40,9 @@ func TestMain(m *testing.M) {
 }
 
 func TestTodoCLI(t *testing.T) {
-	task1 := "enable adding task from STDIN"
+	task1 := "use flags with todo cmd"
 	task2 := "enable configuration with env vars"
+	task3 := "enable adding task from STDIN"
 
 	dir, err := os.Getwd()
 	if err != nil {
@@ -64,6 +66,20 @@ func TestTodoCLI(t *testing.T) {
 		}
 	})
 
+	t.Run("AddNewTaskFromSTDIN", func(t *testing.T) {
+		cmd := exec.Command(cmdPath, "-add")
+		cmdStdIn, err := cmd.StdinPipe()
+		if err != nil {
+			t.Fatal(err)
+		}
+		io.WriteString(cmdStdIn, task3)
+		cmdStdIn.Close()
+
+		if err := cmd.Run(); err != nil {
+			t.Fatal(err)
+		}
+	})
+
 	t.Run("ListTasks", func(t *testing.T) {
 		cmd := exec.Command(cmdPath, "-list")
 		out, err := cmd.CombinedOutput()
@@ -71,7 +87,7 @@ func TestTodoCLI(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		expected := fmt.Sprintf("  1: %s\n  2: %s\n", task1, task2)
+		expected := fmt.Sprintf("  1: %s\n  2: %s\n  3: %s\n", task1, task2, task3)
 
 		if string(out) != expected {
 			t.Errorf("Expected %q, got %q instead\n", expected, string(out))
@@ -92,7 +108,7 @@ func TestTodoCLI(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		expected := fmt.Sprintf("x 1: %s\n  2: %s\n", task1, task2)
+		expected := fmt.Sprintf("x 1: %s\n  2: %s\n  3: %s\n", task1, task2, task3)
 
 		if string(out) != expected {
 			t.Errorf("Expected %q, got %q instead\n", expected, string(out))
