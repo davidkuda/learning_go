@@ -8,8 +8,8 @@ import (
 	"pragprog.com/rggo/interacting/todo"
 )
 
-// Hardcoding the file name
-const todoFileName = ".todo.json"
+// Default file name, can be overwritten with env var TODO_FILENAME
+var todoFileName = ".todo.json"
 
 func main() {
 	// Invoke help with custom message with "./todo -h / -help / --help"
@@ -27,6 +27,9 @@ func main() {
 	flag.Parse()
 
 	// Define an items list
+	if os.Getenv("TODO_FILENAME") != "" {
+		todoFileName = os.Getenv("TODO_FILENAME")
+	}
 	l := &todo.List{}
 
 	// Read existing data from .todo.json with Get()
