@@ -90,7 +90,7 @@ func main() {
 		}
 	default:
 		// Invalid flag provided
-		fmt.Fprintln(os.Stderr, "Invalid Option")
+		fmt.Fprintln(os.Stderr, "Please provide an option with the todo cmd, see todo -help")
 		os.Exit(1)
 	}
 }
