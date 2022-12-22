@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	binName = "todo"
+	binName  = "todo"
 	fileName = ".todo.json"
 )
 
@@ -39,7 +39,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestTodoCLI(t *testing.T) {
-	task := "test task number 1"
+	task1 := "enable adding task from STDIN"
+	task2 := "enable configuration with env vars"
 
 	dir, err := os.Getwd()
 	if err != nil {
@@ -49,9 +50,16 @@ func TestTodoCLI(t *testing.T) {
 	cmdPath := filepath.Join(dir, binName)
 
 	t.Run("AddNewTask", func(t *testing.T) {
-		cmd := exec.Command(cmdPath, "-task", task)
+		// first, test ./todo -task <this is a todo item>
+		cmd1 := exec.Command(cmdPath, "-task", task1)
 
-		if err := cmd.Run(); err != nil {
+		if err := cmd1.Run(); err != nil {
+			t.Fatal(err)
+		}
+
+		// next, test. ./todo -add <this is another todo item>
+		cmd2 := exec.Command(cmdPath, "-add", task2)
+		if err := cmd2.Run(); err != nil {
 			t.Fatal(err)
 		}
 	})
@@ -63,7 +71,7 @@ func TestTodoCLI(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		expected := fmt.Sprintf("  1: %s\n", task)
+		expected := fmt.Sprintf("  1: %s\n  2: %s\n", task1, task2)
 
 		if string(out) != expected {
 			t.Errorf("Expected %q, got %q instead\n", expected, string(out))
@@ -84,7 +92,7 @@ func TestTodoCLI(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		expected := fmt.Sprintf("x 1: %s\n", task)
+		expected := fmt.Sprintf("x 1: %s\n  2: %s\n", task1, task2)
 
 		if string(out) != expected {
 			t.Errorf("Expected %q, got %q instead\n", expected, string(out))
