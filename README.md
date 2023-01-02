@@ -37,6 +37,36 @@
 
 ### Chapter 4: Composite Types
 
+#### Maps
+
+```go
+ages := map[string]int{
+        "David": 30,
+        "Elon":  30,
+    }
+
+ages := make(map[string]int)
+ages["Richard"] = 30
+
+ages["John"] // == 0 (default value of int), because not in map
+
+age, ok := ages["Lennon"] 
+if !ok { /* handle */ }
+
+// combine both statements in one line:
+age, ok := ages["Paul"]; !ok { /* handle */ }
+
+// most operations on a nil map will work:
+var nilMap map[string]int
+nilMap["McCartney"] // = 0
+// but storing to a nil map causes a panic:
+nilMap["McCartney"] = 30 // panic: Assignment to entry in nil map
+// You must allocate the map before you can store into it.
+```
+
+```go
+```
+
 #### Structs
 
 Sample struct:
