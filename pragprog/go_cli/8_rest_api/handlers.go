@@ -2,6 +2,9 @@ package main
 
 import (
 	"net/http"
+var (
+	ErrNotFound    = errors.New("not found")
+	ErrInvalidData = errors.New("invalid data")
 )
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
