@@ -58,7 +58,7 @@ func todoRouter(todoFile string, l sync.Locker) http.HandlerFunc {
 		case http.MethodGet:
 			getOneHandler(w, r, list, id)
 		case http.MethodDelete:
-			deleteHandler(w, r, list, id, todoFoile)
+			deleteHandler(w, r, list, id, todoFile)
 		case http.MethodPatch:
 			patchHandler(w, r, list, id, todoFile)
 		default:
