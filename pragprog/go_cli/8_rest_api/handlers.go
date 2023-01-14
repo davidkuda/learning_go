@@ -28,7 +28,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 func todoRouter(todoFile string, l sync.Locker) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		list := todo.List{}
+		list := &todo.List{}
 		if err := list.Get(todoFile); err != nil {
 			replyError(w, r, http.StatusInternalServerError, err.Error())
 			return
