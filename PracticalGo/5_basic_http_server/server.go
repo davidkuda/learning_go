@@ -13,8 +13,10 @@ func main() {
 		listenAddr = ":8008"
 	}
 	
-	http.HandleFunc("/v1/api", apiHandler)
-	log.Fatal(http.ListenAndServe(listenAddr, nil))
+	mux := http.NewServeMux()
+	
+	mux.HandleFunc("/v1/api", apiHandler)
+	log.Fatal(http.ListenAndServe(listenAddr, mux))
 }
 
 // w: object to write back the response; r: incoming request
