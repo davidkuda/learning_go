@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -31,9 +32,33 @@ func setupHandlers(mux *http.ServeMux) {
 // w: object to write back the response; r: incoming request
 // no return required
 func apiHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(r)
 	fmt.Fprintf(w, "Hello World")
 }
 
 func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(r)
 	fmt.Fprintf(w, "Health shining like the moon!")
+}
+
+type requestLog struct {
+	URL      string `json:"url"`
+	Method   string `json:"method"`
+	BodySize int64  `json:"content_length"`
+	Protocol string `json:"protocol"`
+}
+
+func logRequest(r *http.Request) {
+	l := requestLog{
+		URL:      r.URL.String(),
+		Method:   r.Method,
+		BodySize: r.ContentLength,
+		Protocol: r.Proto,
+	}
+	
+	j, err := json.Marshal(&l)
+	if err != nil {
+		panic(err)
+	}
+	log.Println(string(j))
 }
