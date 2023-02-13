@@ -37,6 +37,20 @@
 
 ### Chapter 4: Composite Types
 
+#### Arrays
+
+- fixed-size, homogenous aggregatet type
+- arrays are rarely used directly in Go because of their fixed-size; Slices, on the other hand, are dynamic (grow and shrink) and are thus preferred.
+
+```go
+// initialize an array
+a := [3]int{1,2,3}
+b := [3]int{1} // default value of int for the ones not explicitely defined
+c := [...]int{1,2,3,4,5} // no need to specify length of arr with an elipsis ("..."); len determined by num of initializers
+```
+
+- arrays in arguments are treated as copy, not as reference
+
 #### Maps
 
 ```go
